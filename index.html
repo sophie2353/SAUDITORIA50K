@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>SAUDITORIA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #6a0dad; /* púrpura */
+      color: white;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 20px;
+      font-weight: bold;
+      font-size: 20px;
+    }
+    main {
+      padding: 30px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 2em;
+      margin-bottom: 10px;
+    }
+    p {
+      font-size: 1.1em;
+      line-height: 1.5;
+    }
+    button {
+      background-color: white;
+      color: #6a0dad;
+      border: none;
+      padding: 12px 24px;
+      margin: 15px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #ddd;
+    }
+    input[type="file"] {
+      margin: 20px auto;
+      display: block;
+    }
+    pre {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 6px;
+      text-align: left;
+      white-space: pre-wrap;
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    /* Responsive ajustes */
+    @media (max-width: 768px) {
+      header {
+        flex-direction: column;
+        text-align: center;
+        font-size: 18px;
+      }
+      h1 {
+        font-size: 1.6em;
+      }
+      p {
+        font-size: 1em;
+      }
+      button {
+        width: 90%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>SAUDITORIA</div>
+    <div>SOCREDI</div>
+  </header>
+
+  <main>
+    <h1>Corrige las facturas de tu negocio en pocos minutos</h1>
+    <p>Miles de dólares ahorrados en una corrección.<br>
+       Accede a <strong>SAUDITORIA</strong> con solo un pago.</p>
+
+    <!-- Botón de pago Kontigo -->
+    <button onclick="openKontigoPayment({
+      slug: 'sauditoria',
+      amount: 2000,
+      redirectUrl: 'https://app.appsmith.com/app/sauditoria/page2'
+    })">
+      Pagar Servicio
+    </button>
+
+    <!-- Sección de envío y corrección -->
+    <h2>Sube tu archivo para corregir</h2>
+    <input type="file" id="archivo" />
+    <button onclick="enviarFacturas()">Corregir Facturas</button>
+
+    <!-- Resultado -->
+    <h2>Resultado</h2>
+    <pre id="resultado"></pre>
+
+    <!-- Botón de descarga CSV -->
+    <button onclick="descargarCSV()">Descargar CSV</button>
+  </main>
+
+  <script>
+    function openKontigoPayment({ slug, amount, redirectUrl }) {
+      const url = `https://app.kontigo.lat/pay/${slug}?amount=${amount}&redirect_url=${encodeURIComponent(redirectUrl)}`;
+      window.location.href = url;
+    }
+
+    async function enviarFacturas() {
+      const response = await fetch("TU_ENDPOINT_DE_APPSMITH_ANALIZAR", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ facturas: [
+          { Producto: "Café", Precio: 10, IVA: 1.6, Total: 11.6, Fecha: "2025-01-10" },
+          { Producto: "Pan", Precio: 5, IVA: 0.8, Total: 5.8, Fecha: "2025-01-10" }
+        ]})
+      });
+      const data = await response.json();
+      document.getElementById("resultado").innerText = JSON.stringify(data, null, 2);
+    }
+
+    async function descargarCSV() {
+      const response = await fetch("TU_ENDPOINT_DE_APPSMITH_EXPORTARCSV", { method: "POST" });
+      const csv = await response.text();
+
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "facturas_corregidas.csv";
+      a.click();
+      window.URL.revokeObjectURL(url);
+    }
+  </script>
+</body>
+</html>
