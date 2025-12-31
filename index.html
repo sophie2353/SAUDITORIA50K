@@ -7,8 +7,8 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #6a0dad; /* púrpura */
+      font-family: 'Arial', sans-serif;
+      background-color: #6a0dad;
       color: white;
     }
     header {
@@ -19,17 +19,18 @@
       font-weight: bold;
       font-size: 20px;
     }
-    main {
-      padding: 30px;
+    .hero {
+      background: linear-gradient(135deg, #6a0dad, #9b30ff);
+      padding: 80px 20px;
       text-align: center;
     }
-    h1 {
-      font-size: 2em;
-      margin-bottom: 10px;
+    .hero h1 {
+      font-size: 2.5em;
+      margin-bottom: 20px;
     }
-    p {
-      font-size: 1.1em;
-      line-height: 1.5;
+    .hero p {
+      font-size: 1.2em;
+      margin-bottom: 30px;
     }
     button {
       background-color: white;
@@ -41,41 +42,45 @@
       cursor: pointer;
       border-radius: 6px;
       font-weight: bold;
+      transition: transform 0.2s ease;
     }
     button:hover {
+      transform: scale(1.05);
       background-color: #ddd;
+    }
+    .service {
+      background: rgba(255,255,255,0.1);
+      padding: 40px;
+      border-radius: 12px;
+      margin: 40px auto;
+      max-width: 700px;
+      text-align: center;
     }
     input[type="file"] {
       margin: 20px auto;
       display: block;
     }
-    pre {
-      background: rgba(255,255,255,0.1);
-      padding: 20px;
-      border-radius: 6px;
-      text-align: left;
-      white-space: pre-wrap;
-      max-width: 100%;
-      overflow-x: auto;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
     }
-
-    /* Responsive ajustes */
+    table th, table td {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+    table tr:nth-child(even) {
+      background: rgba(255,255,255,0.05);
+    }
     @media (max-width: 768px) {
       header {
         flex-direction: column;
         text-align: center;
         font-size: 18px;
       }
-      h1 {
-        font-size: 1.6em;
-      }
-      p {
-        font-size: 1em;
-      }
-      button {
-        width: 90%;
-        max-width: 300px;
-      }
+      .hero h1 { font-size: 1.8em; }
+      .hero p { font-size: 1em; }
+      button { width: 90%; max-width: 300px; }
     }
   </style>
 </head>
@@ -85,32 +90,29 @@
     <div>SOCREDI</div>
   </header>
 
-  <main>
+  <section class="hero">
     <h1>Corrige las facturas de tu negocio en pocos minutos</h1>
     <p>Miles de dólares ahorrados en una corrección.<br>
        Accede a <strong>SAUDITORIA</strong> con solo un pago.</p>
-
-    <!-- Botón de pago Kontigo -->
     <button onclick="openKontigoPayment({
       slug: 'sauditoria',
       amount: 2000,
-      redirectUrl: 'https://app.appsmith.com/app/sauditoria/page2'
+      redirectUrl: 'https://tuusuario.github.io/sauditoria-web/'
     })">
       Pagar Servicio
     </button>
+  </section>
 
-    <!-- Sección de envío y corrección -->
+  <section class="service">
     <h2>Sube tu archivo para corregir</h2>
     <input type="file" id="archivo" />
     <button onclick="enviarFacturas()">Corregir Facturas</button>
 
-    <!-- Resultado -->
     <h2>Resultado</h2>
-    <pre id="resultado"></pre>
+    <table id="tablaResultados"></table>
 
-    <!-- Botón de descarga CSV -->
-    <button onclick="descargarCSV()">Descargar CSV</button>
-  </main>
+    <button onclick="descargarCSV()">💾 Descargar CSV</button>
+  </section>
 
   <script>
     function openKontigoPayment({ slug, amount, redirectUrl }) {
@@ -128,7 +130,22 @@
         ]})
       });
       const data = await response.json();
-      document.getElementById("resultado").innerText = JSON.stringify(data, null, 2);
+      mostrarTabla(data);
+    }
+
+    function mostrarTabla(data) {
+      const facturas = data.facturasCorregidas || [];
+      let html = "<tr><th>Producto</th><th>Precio</th><th>IVA</th><th>Total</th><th>% IVA</th></tr>";
+      facturas.forEach(f => {
+        html += `<tr>
+          <td>${f.Producto}</td>
+          <td>${f.Precio}</td>
+          <td>${f.IVA}</td>
+          <td>${f.Total}</td>
+          <td>${f.PorcentajeIVA}</td>
+        </tr>`;
+      });
+      document.getElementById("tablaResultados").innerHTML = html;
     }
 
     async function descargarCSV() {
