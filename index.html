@@ -127,11 +127,17 @@
     © 2025 SAUDITORIA · SOCREDI · Todos los derechos reservados
   </footer>
 
-  <script>
-    function openKontigoPayment({ slug, amount, redirectUrl }) {
-      const url = `https://app.kontigo.lat/pay/${https:4532d4ea-0554-40ed-87da-334bf9292f59}?amount=${500}&redirect_url=${encodeURIComponent(redirectUrl)}`;
-      window.location.href = url;
-    }
+  
+
+<script>
+  function openKontigoPayment() {
+    const slug = "4532d4ea-0554-40ed-87da-334bf9292f59";
+    const amount = 500;
+    const redirectUrl = "https://sophie2353.github.io/SAUDITORIA50K/";
+    const url = `https://app.kontigo.lat/pay/${slug}?amount=${amount}&redirect_url=${encodeURIComponent(redirectUrl)}`;
+    
+    window.open(url, "_blank"); // abre en nueva pestaña
+  }
 
     async function enviarFacturas() {
       const response = await fetch("TU_ENDPOINT_DE_APPSMITH_ANALIZAR", {
