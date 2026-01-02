@@ -104,16 +104,7 @@
     <p>Miles de dólares ahorrados en una corrección.<br>
        Accede a <strong>SAUDITORIA</strong> con solo un pago.</p>
     <button onclick="openKontigoPayment()">Pagar $500</button>
-
-<script>
-  function openKontigoPayment() {
-    const slug = "4532d4ea-0554-40ed-87da-334bf9292f59";
-    const amount = 50000;
-    const redirectUrl = "https://sophie2353.github.io/SAUDITORIA50K/";
-    const url = `https://app.kontigo.lat/pay/${slug}?amount=${amount}&redirect_url=${encodeURIComponent(redirectUrl)}`;
-    
-    window.open(url, "_blank"); // abre en nueva pestaña
-  }
+  </section>
 
   <section class="service">
     <h2>Sube tu archivo para corregir</h2>
@@ -129,6 +120,16 @@
   <footer>
     © 2025 SAUDITORIA · SOCREDI · Todos los derechos reservados
   </footer>
+
+  <script>
+    function openKontigoPayment() {
+      const slug = "4532d4ea-0554-40ed-87da-334bf9292f59";
+      const amount = 50000; // 500 USD = 50000 USDC
+      const redirectUrl = "https://sophie2353.github.io/SAUDITORIA50K/";
+      const url = `https://app.kontigo.lat/pay/${slug}?amount=${amount}&redirect_url=${encodeURIComponent(redirectUrl)}`;
+      
+      window.open(url, "_blank"); // abre en nueva pestaña
+    }
 
     async function enviarFacturas() {
       const response = await fetch("TU_ENDPOINT_DE_APPSMITH_ANALIZAR", {
